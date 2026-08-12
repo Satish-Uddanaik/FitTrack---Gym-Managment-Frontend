@@ -4,41 +4,34 @@ import Login from "../pages/auth/Login";
 import Register from "../pages/auth/Register";
 
 import Dashboard from "../pages/dashboard/Dashboard";
-import Members from "../pages/member/Members";
-import Memberships from "../pages/membership/Memberships";
 
-import ProtectedRoute from "../components/ProtectedRoute";
-import DashboardLayout from "../layouts/DashboardLayout";
-import AddMembership from "../pages/membership/AddMembership";
-import UpdateMembership from "../pages/membership/UpdateMembership";
+import Members from "../pages/member/Members";
 import AddMember from "../pages/member/AddMember";
 import UpdateMember from "../pages/member/UpdateMember";
 
+import Memberships from "../pages/membership/Memberships";
+import AddMembership from "../pages/membership/AddMembership";
+import UpdateMembership from "../pages/membership/UpdateMembership";
+
+import ProtectedRoute from "../components/ProtectedRoute";
+import DashboardLayout from "../layouts/DashboardLayout";
 
 const AppRoutes = () => {
 
     return (
+
         <Routes>
 
-            {/* ================= PUBLIC ROUTES ================= */}
+            {/* Public */}
 
-            <Route
-                path="/"
-                element={<Navigate to="/login" replace />}
-            />
+            <Route path="/" element={<Navigate to="/login" replace />} />
 
-            <Route
-                path="/login"
-                element={<Login />}
-            />
+            <Route path="/login" element={<Login />} />
 
-            <Route
-                path="/register"
-                element={<Register />}
-            />
+            <Route path="/register" element={<Register />} />
 
 
-            {/* ================= PROTECTED ROUTES ================= */}
+            {/* Protected */}
 
             <Route element={<ProtectedRoute />}>
 
@@ -53,6 +46,7 @@ const AppRoutes = () => {
                         path="/members"
                         element={<Members />}
                     />
+
                     <Route
                         path="/members/add"
                         element={<AddMember />}
@@ -68,7 +62,8 @@ const AppRoutes = () => {
                         element={<Memberships />}
                     />
 
-                    <Route path="/memberships/add"
+                    <Route
+                        path="/memberships/add"
                         element={<AddMembership />}
                     />
 
@@ -76,12 +71,11 @@ const AppRoutes = () => {
                         path="/memberships/edit/:id"
                         element={<UpdateMembership />}
                     />
+
                 </Route>
 
             </Route>
 
-
-            {/* ================= INVALID URL ================= */}
 
             <Route
                 path="*"
@@ -89,7 +83,9 @@ const AppRoutes = () => {
             />
 
         </Routes>
+
     );
+
 };
 
 export default AppRoutes;
