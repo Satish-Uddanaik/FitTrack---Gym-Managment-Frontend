@@ -1,182 +1,187 @@
-import { useForm } from "react-hook-form";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { register as registerApi } from "../../api/authApi";
-import { useNavigate, Link } from "react-router-dom";
-import { toast } from "react-hot-toast";
+import useAuth from "../../hooks/useAuth";
 
 const Register = () => {
 
-    const {
-
-        register,
-
-        handleSubmit,
-
-        formState: { errors }
-
-    } = useForm();
-
     const navigate = useNavigate();
+    const { login } = useAuth();
 
-    const onSubmit = async (data) => {
+    const [form, setForm] = useState({
+        username: "",
+        email: "",
+        password: "",
+        gymName: "",
+    });
+
+    const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
+
+    const handleChange = (e) => {
+        setForm({
+            ...form,
+            [e.target.name]: e.target.value,
+        });
+    };
+
+    const handleSubmit = async (e) => {
+
+        e.preventDefault();
+
+        setError("");
+        setLoading(true);
 
         try {
 
-            await registerApi(data);
+            const response = await registerApi(form);
 
-            toast.success("Registration Successful");
+            // Backend returns JWT after registration
+            login(response);
 
-            navigate("/login");
+            navigate("/dashboard");
 
-        }
+        } catch (err) {
 
-        catch (error) {
-
-            toast.error(
-
-                error.response?.data?.message ||
-
-                "Registration Failed"
-
+            setError(
+                err.response?.data?.message ||
+                "Registration failed. Please try again."
             );
 
-        }
+        } finally {
 
+            setLoading(false);
+
+        }
     };
 
     return (
+        <div className="min-h-screen bg-slate-100 flex items-center justify-center px-4">
 
-        <div className="min-h-screen flex justify-center items-center bg-gray-100">
+            <div className="w-full max-w-md bg-white rounded-2xl shadow-lg p-8">
 
-            <div className="bg-white p-8 rounded-lg shadow-lg w-[420px]">
+                {/* Logo / Heading */}
+                <div className="text-center mb-8">
 
-                <h2 className="text-3xl font-bold text-center mb-6">
+                    <h1 className="text-3xl font-bold text-blue-600">
+                        FitTrack
+                    </h1>
 
-                    Register
-
-                </h2>
-
-                <form
-
-                    onSubmit={handleSubmit(onSubmit)}
-
-                    className="space-y-4"
-
-                >
-
-                    <input
-
-                        type="text"
-
-                        placeholder="Gym Name"
-
-                        {...register("gymName", {
-
-                            required: "Gym Name is required"
-
-                        })}
-
-                        className="w-full border rounded p-3"
-
-                    />
-
-                    <p className="text-red-500 text-sm">
-
-                        {errors.gymName?.message}
-
+                    <p className="text-gray-500 mt-2">
+                        Create your gym account
                     </p>
 
-                    <input
+                </div>
 
-                        type="text"
+                {/* Error */}
+                {error && (
+                    <div className="mb-5 rounded-lg bg-red-50 border border-red-200
+                                    text-red-600 px-4 py-3 text-sm">
+                        {error}
+                    </div>
+                )}
 
-                        placeholder="Username"
+                <form onSubmit={handleSubmit} className="space-y-5">
 
-                        {...register("username", {
+                    {/* Username */}
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                            Username
+                        </label>
 
-                            required: "Username is required"
+                        <input
+                            type="text"
+                            name="username"
+                            value={form.username}
+                            onChange={handleChange}
+                            placeholder="Enter username"
+                            required
+                            className="w-full px-4 py-3 border border-gray-300
+                                       rounded-lg outline-none
+                                       focus:ring-2 focus:ring-blue-500"
+                        />
+                    </div>
 
-                        })}
+                    {/* Email */}
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                            Email
+                        </label>
 
-                        className="w-full border rounded p-3"
+                        <input
+                            type="email"
+                            name="email"
+                            value={form.email}
+                            onChange={handleChange}
+                            placeholder="Enter email"
+                            required
+                            className="w-full px-4 py-3 border border-gray-300
+                                       rounded-lg outline-none
+                                       focus:ring-2 focus:ring-blue-500"
+                        />
+                    </div>
 
-                    />
+                    {/* Gym Name */}
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                            Gym Name
+                        </label>
 
-                    <p className="text-red-500 text-sm">
+                        <input
+                            type="text"
+                            name="gymName"
+                            value={form.gymName}
+                            onChange={handleChange}
+                            placeholder="Enter gym name"
+                            required
+                            className="w-full px-4 py-3 border border-gray-300
+                                       rounded-lg outline-none
+                                       focus:ring-2 focus:ring-blue-500"
+                        />
+                    </div>
 
-                        {errors.username?.message}
+                    {/* Password */}
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                            Password
+                        </label>
 
-                    </p>
+                        <input
+                            type="password"
+                            name="password"
+                            value={form.password}
+                            onChange={handleChange}
+                            placeholder="Enter password"
+                            required
+                            className="w-full px-4 py-3 border border-gray-300
+                                       rounded-lg outline-none
+                                       focus:ring-2 focus:ring-blue-500"
+                        />
+                    </div>
 
-                    <input
-
-                        type="email"
-
-                        placeholder="Email"
-
-                        {...register("email", {
-
-                            required: "Email is required"
-
-                        })}
-
-                        className="w-full border rounded p-3"
-
-                    />
-
-                    <p className="text-red-500 text-sm">
-
-                        {errors.email?.message}
-
-                    </p>
-
-                    <input
-
-                        type="password"
-
-                        placeholder="Password"
-
-                        {...register("password", {
-
-                            required: "Password is required"
-
-                        })}
-
-                        className="w-full border rounded p-3"
-
-                    />
-
-                    <p className="text-red-500 text-sm">
-
-                        {errors.password?.message}
-
-                    </p>
-
+                    {/* Submit */}
                     <button
-
-                        className="w-full bg-green-600 text-white py-3 rounded hover:bg-green-700"
-
+                        type="submit"
+                        disabled={loading}
+                        className="w-full bg-blue-600 text-white py-3 rounded-lg
+                                   font-semibold hover:bg-blue-700
+                                   transition disabled:opacity-60"
                     >
-
-                        Register
-
+                        {loading ? "Creating Account..." : "Create Account"}
                     </button>
 
                 </form>
 
-                <p className="mt-5 text-center">
+                {/* Login Link */}
+                <p className="text-center text-sm text-gray-500 mt-6">
 
-                    Already have an account?
+                    Already have an account?{" "}
 
                     <Link
-
                         to="/login"
-
-                        className="text-blue-600 ml-2"
-
+                        className="text-blue-600 font-semibold hover:underline"
                     >
-
                         Login
-
                     </Link>
 
                 </p>
@@ -184,9 +189,8 @@ const Register = () => {
             </div>
 
         </div>
-
     );
-
 };
 
 export default Register;
+

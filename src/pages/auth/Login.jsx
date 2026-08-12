@@ -1,130 +1,157 @@
-import { useForm } from "react-hook-form";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { login as loginApi } from "../../api/authApi";
-import { useNavigate, Link } from "react-router-dom";
-import { toast } from "react-hot-toast";
 import useAuth from "../../hooks/useAuth";
 
 const Login = () => {
 
-    const { register, handleSubmit, formState: { errors } } = useForm();
-
+    const navigate = useNavigate();
     const { login } = useAuth();
 
-    const navigate = useNavigate();
+    const [form, setForm] = useState({
+        username: "",
+        password: "",
+    });
 
-    const onSubmit = async (data) => {
+    const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
+
+    const handleChange = (e) => {
+        setForm({
+            ...form,
+            [e.target.name]: e.target.value,
+        });
+    };
+
+    const handleSubmit = async (e) => {
+
+        e.preventDefault();
+
+        setError("");
+        setLoading(true);
 
         try {
 
-            const response = await loginApi(data);
+            const response = await loginApi(form);
 
+            // Store JWT and user information
             login(response);
 
-            toast.success("Login Successful");
-
+            // Go to dashboard
             navigate("/dashboard");
 
-        } catch (error) {
+        } catch (err) {
 
-            toast.error(
-                error.response?.data?.message || "Login Failed"
+            setError(
+                err.response?.data?.message ||
+                "Invalid username or password."
             );
 
-        }
+        } finally {
 
+            setLoading(false);
+
+        }
     };
 
     return (
+        <div className="min-h-screen bg-slate-100 flex items-center justify-center px-4">
 
-        <div className="min-h-screen flex justify-center items-center bg-gray-100">
+            <div className="w-full max-w-md bg-white rounded-2xl shadow-lg p-8">
 
-            <div className="bg-white p-8 rounded-lg shadow-lg w-96">
+                {/* Logo */}
+                <div className="text-center mb-8">
 
-                <h2 className="text-3xl font-bold text-center mb-6">
+                    <h1 className="text-3xl font-bold text-blue-600">
+                        FitTrack
+                    </h1>
 
-                    Login
+                    <p className="text-gray-500 mt-2">
+                        Welcome back to your gym
+                    </p>
 
-                </h2>
+                </div>
 
-                <form
-                    onSubmit={handleSubmit(onSubmit)}
-                    className="space-y-4"
-                >
+                {/* Error */}
+                {error && (
+                    <div className="mb-5 rounded-lg bg-red-50 border border-red-200
+                                    text-red-600 px-4 py-3 text-sm">
+                        {error}
+                    </div>
+                )}
 
+                <form onSubmit={handleSubmit} className="space-y-5">
+
+                    {/* Username */}
                     <div>
 
-                        <input
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                            Username
+                        </label>
 
+                        <input
                             type="text"
-
-                            placeholder="Username"
-
-                            {...register("username", {
-                                required: "Username is required"
-                            })}
-
-                            className="w-full border rounded p-3"
-
+                            name="username"
+                            value={form.username}
+                            onChange={handleChange}
+                            placeholder="Enter username"
+                            required
+                            autoComplete="username"
+                            className="w-full px-4 py-3 border border-gray-300
+                                       rounded-lg outline-none
+                                       focus:ring-2 focus:ring-blue-500
+                                       focus:border-blue-500"
                         />
-
-                        <p className="text-red-500 text-sm">
-
-                            {errors.username?.message}
-
-                        </p>
 
                     </div>
 
+                    {/* Password */}
                     <div>
 
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                            Password
+                        </label>
+
                         <input
-
                             type="password"
-
-                            placeholder="Password"
-
-                            {...register("password", {
-                                required: "Password is required"
-                            })}
-
-                            className="w-full border rounded p-3"
-
+                            name="password"
+                            value={form.password}
+                            onChange={handleChange}
+                            placeholder="Enter password"
+                            required
+                            autoComplete="current-password"
+                            className="w-full px-4 py-3 border border-gray-300
+                                       rounded-lg outline-none
+                                       focus:ring-2 focus:ring-blue-500
+                                       focus:border-blue-500"
                         />
-
-                        <p className="text-red-500 text-sm">
-
-                            {errors.password?.message}
-
-                        </p>
 
                     </div>
 
+                    {/* Login Button */}
                     <button
-
-                        className="w-full bg-blue-600 text-white py-3 rounded hover:bg-blue-700"
-
+                        type="submit"
+                        disabled={loading}
+                        className="w-full bg-blue-600 text-white py-3 rounded-lg
+                                   font-semibold hover:bg-blue-700
+                                   transition disabled:opacity-60
+                                   disabled:cursor-not-allowed"
                     >
-
-                        Login
-
+                        {loading ? "Logging in..." : "Login"}
                     </button>
 
                 </form>
 
-                <p className="mt-5 text-center">
+                {/* Register Link */}
+                <p className="text-center text-sm text-gray-500 mt-6">
 
-                    Don't have an account?
+                    Don't have an account?{" "}
 
                     <Link
-
                         to="/register"
-
-                        className="text-blue-600 ml-2"
-
+                        className="text-blue-600 font-semibold hover:underline"
                     >
-
-                        Register
-
+                        Create Account
                     </Link>
 
                 </p>
@@ -132,9 +159,7 @@ const Login = () => {
             </div>
 
         </div>
-
     );
-
 };
 
 export default Login;

@@ -9,64 +9,68 @@ import Memberships from "../pages/membership/Memberships";
 
 import ProtectedRoute from "../components/ProtectedRoute";
 import DashboardLayout from "../layouts/DashboardLayout";
+import AddMembership from "../pages/membership/AddMembership";
+import UpdateMembership from "../pages/membership/UpdateMembership";
+
 
 const AppRoutes = () => {
 
     return (
-
         <Routes>
 
-            {/* Public Routes */}
+            {/* ================= PUBLIC ROUTES ================= */}
 
-            <Route path="/" element={<Navigate to="/login" replace />} />
+            <Route
+                path="/"
+                element={<Navigate to="/login" replace />}
+            />
 
-            <Route path="/login" element={<Login />} />
+            <Route
+                path="/login"
+                element={<Login />}
+            />
 
-            <Route path="/register" element={<Register />} />
+            <Route
+                path="/register"
+                element={<Register />}
+            />
 
 
-            {/* Protected Routes */}
+            {/* ================= PROTECTED ROUTES ================= */}
 
             <Route element={<ProtectedRoute />}>
 
-                <Route
-                    path="/dashboard"
-                    element={<Dashboard />}
-                />
+                <Route element={<DashboardLayout />}>
 
-                <Route
-                    path="/members"
-                    element={<Members />}
-                />
+                    <Route
+                        path="/dashboard"
+                        element={<Dashboard />}
+                    />
 
-                <Route
-                    path="/memberships"
-                    element={<Memberships />}
-                />
+                    <Route
+                        path="/members"
+                        element={<Members />}
+                    />
 
-            <Route element={<DashboardLayout />}>
+                    <Route
+                        path="/memberships"
+                        element={<Memberships />}
+                    />
 
-        <Route
-            path="/dashboard"
-            element={<Dashboard />}
-        />
+                    <Route path="/memberships/add"
+                        element={<AddMembership />}
+                    />
 
-        <Route
-            path="/members"
-            element={<Members />}
-        />
+                    <Route
+                        path="/memberships/edit/:id"
+                        element={<UpdateMembership />}
+                    />
+                </Route>
 
-        <Route
-            path="/memberships"
-            element={<Memberships />}
-        />
-
-    </Route>
-
-</Route>
+            </Route>
 
 
-            {/* Invalid URL */}
+            {/* ================= INVALID URL ================= */}
 
             <Route
                 path="*"
@@ -74,9 +78,7 @@ const AppRoutes = () => {
             />
 
         </Routes>
-
     );
-
 };
 
 export default AppRoutes;
