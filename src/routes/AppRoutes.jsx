@@ -11,6 +11,8 @@ import ProtectedRoute from "../components/ProtectedRoute";
 import DashboardLayout from "../layouts/DashboardLayout";
 import AddMembership from "../pages/membership/AddMembership";
 import UpdateMembership from "../pages/membership/UpdateMembership";
+import AddMember from "../pages/member/AddMember";
+import UpdateMember from "../pages/member/UpdateMember";
 
 
 const AppRoutes = () => {
@@ -50,6 +52,15 @@ const AppRoutes = () => {
                     <Route
                         path="/members"
                         element={<Members />}
+                    />
+                    <Route
+                        path="/members/add"
+                        element={<AddMember />}
+                    />
+
+                    <Route
+                        path="/members/edit/:id"
+                        element={<UpdateMember />}
                     />
 
                     <Route
