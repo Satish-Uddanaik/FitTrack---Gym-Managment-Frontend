@@ -10,9 +10,7 @@ createRoot(document.getElementById('root')).render(
   <BrowserRouter>
 
         <AuthProvider>
-            <Toaster position="top-right"/>
             <App />
-
         </AuthProvider>
 
     </BrowserRouter>
