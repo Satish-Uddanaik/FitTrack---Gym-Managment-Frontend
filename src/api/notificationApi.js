@@ -4,7 +4,7 @@ import api from "./axios";
 
 export const getNotifications = async () => {
 
-    const response = await api.get("/notifications");
+    const response = await api.get("/api/notifications");
 
     return response.data;
 
@@ -15,7 +15,7 @@ export const getNotifications = async () => {
 
 export const getNotificationCount = async () => {
 
-    const response = await api.get("/notifications/count");
+    const response = await api.get("/api/notifications/count");
 
     return response.data;
 

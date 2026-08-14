@@ -21,6 +21,10 @@ import ChangePassword from "../pages/profile/ChangePassword";
 
 import Notifications from "../pages/notification/Notifications"
 
+import Reports from "../pages/reports/Reports";
+
+import Revenue from "../pages/reports/Revenue";
+
 const AppRoutes = () => {
 
     return (
@@ -90,6 +94,19 @@ const AppRoutes = () => {
                     <Route
                         path="/change-password"
                         element={<ChangePassword />}
+                    />
+
+                    <Route
+                        path="/reports"
+                        element={<Reports />}
+                    />
+
+                    <Route
+
+                        path="/revenue"
+
+                        element={<Revenue />}
+
                     />
 
                 </Route>
