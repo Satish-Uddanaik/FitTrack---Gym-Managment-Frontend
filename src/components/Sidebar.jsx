@@ -4,6 +4,7 @@ import {
     LayoutDashboard,
     Users,
     CreditCard,
+    User,
     LogOut,
     Dumbbell,
 } from "lucide-react";
@@ -34,6 +35,11 @@ const Sidebar = () => {
             path: "/memberships",
             icon: CreditCard,
         },
+        {
+            name: "Profile",
+            path: "/profile",
+            icon: User,
+        }
     ];
 
     return (
