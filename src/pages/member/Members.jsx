@@ -11,8 +11,17 @@ import { useNavigate } from "react-router-dom";
 
 import {
     getAllMembers,
-    deleteMember
-    // searchMembers
+    deleteMember,
+    searchMember,
+    getActiveMembers,
+    getExpiredMembers,
+    getDueBills,
+    getExpiringMembers,
+    getRecentMembers,
+    getUpcomingBills,
+    getTotalMembers,
+    getActiveCount,
+    getExpiredCount
 } from "../../api/memberApi";
 
 const Members = () => {
@@ -21,11 +30,16 @@ const Members = () => {
 
     const [members, setMembers] = useState([]);
     const [search, setSearch] = useState("");
+    const [selectedFilter, setSelectedFilter] = useState("ALL");
 
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
 
     const [deletingId, setDeletingId] = useState(null);
+
+    const [totalMembers, setTotalMembers] = useState(0);
+const [activeCount, setActiveCount] = useState(0);
+const [expiredCount, setExpiredCount] = useState(0);
 
 
     const loadMembers = async () => {
@@ -54,12 +68,32 @@ const Members = () => {
 
     };
 
+    const loadCounts = async () => {
+
+    try {
+
+        const total = await getTotalMembers();
+        const active = await getActiveCount();
+        const expired = await getExpiredCount();
+
+        setTotalMembers(total);
+        setActiveCount(active);
+        setExpiredCount(expired);
+
+    } catch (err) {
+
+        console.log(err);
+
+    }
+
+};
 
     useEffect(() => {
 
-        loadMembers();
+    loadMembers();
+    loadCounts();
 
-    }, []);
+}, []);
 
 
     const handleSearch = async (e) => {
@@ -78,7 +112,7 @@ const Members = () => {
 
             }
 
-            const data = await searchMembers(value);
+            const data = await searchMember(value);
 
             setMembers(data);
 
@@ -121,6 +155,73 @@ const Members = () => {
         }
 
     };
+
+    const loadFilteredMembers = async (filter) => {
+
+    try {
+
+        setLoading(true);
+
+        let response;
+
+        switch (filter) {
+
+            case "ACTIVE":
+                response = await getActiveMembers();
+                break;
+
+            case "EXPIRED":
+                response = await getExpiredMembers();
+                break;
+
+            case "DUE":
+                response = await getDueBills();
+                break;
+
+            case "EXPIRING":
+                response = await getExpiringMembers();
+                break;
+
+            case "RECENT":
+                response = await getRecentMembers();
+                break;
+
+            case "UPCOMING":
+                response = await getUpcomingBills();
+                break;
+
+            case "TOTAL":
+                response = await getTotalMembers();
+                break;
+            
+            case "ACTIVE_COUNT":
+                response = await getActiveCount();
+                break;
+
+            case "EXPIRED_COUNT":
+                response = await getExpiredCount();
+                break;
+
+            default:
+                response = await getAllMembers();
+
+        }
+
+        setMembers(response);
+
+        setSelectedFilter(filter);
+
+    } catch (err) {
+
+        setError("Failed to load members.");
+
+    } finally {
+
+        setLoading(false);
+
+    }
+
+};
 
 
     if (loading) {
@@ -177,6 +278,31 @@ const Members = () => {
 
             </div>
 
+            <div className="grid grid-cols-3 gap-5 mb-6">
+
+    <div className="bg-blue-600 text-white p-5 rounded-xl">
+        <h3>Total Members</h3>
+        <p className="text-3xl font-bold">
+            {totalMembers}
+        </p>
+    </div>
+
+    <div className="bg-green-600 text-white p-5 rounded-xl">
+        <h3>Active Members</h3>
+        <p className="text-3xl font-bold">
+            {activeCount}
+        </p>
+    </div>
+
+    <div className="bg-red-600 text-white p-5 rounded-xl">
+        <h3>Expired Members</h3>
+        <p className="text-3xl font-bold">
+            {expiredCount}
+        </p>
+    </div>
+
+</div>
+
 
             {/* Search */}
 
@@ -214,6 +340,88 @@ const Members = () => {
                 </div>
 
             }
+
+            <div className="flex flex-wrap gap-3 mb-6">
+
+    <button
+        onClick={() => loadFilteredMembers("ALL")}
+        className={`px-4 py-2 rounded-lg ${
+            selectedFilter === "ALL"
+                ? "bg-blue-600 text-white"
+                : "bg-gray-200"
+        }`}
+    >
+        All
+    </button>
+
+    <button
+        onClick={() => loadFilteredMembers("ACTIVE")}
+        className={`px-4 py-2 rounded-lg ${
+            selectedFilter === "ACTIVE"
+                ? "bg-green-600 text-white"
+                : "bg-gray-200"
+        }`}
+    >
+        Active
+    </button>
+
+    <button
+        onClick={() => loadFilteredMembers("EXPIRED")}
+        className={`px-4 py-2 rounded-lg ${
+            selectedFilter === "EXPIRED"
+                ? "bg-red-600 text-white"
+                : "bg-gray-200"
+        }`}
+    >
+        Expired
+    </button>
+
+    <button
+        onClick={() => loadFilteredMembers("DUE")}
+        className={`px-4 py-2 rounded-lg ${
+            selectedFilter === "DUE"
+                ? "bg-orange-600 text-white"
+                : "bg-gray-200"
+        }`}
+    >
+        Due Bills
+    </button>
+
+    <button
+        onClick={() => loadFilteredMembers("EXPIRING")}
+        className={`px-4 py-2 rounded-lg ${
+            selectedFilter === "EXPIRING"
+                ? "bg-yellow-600 text-white"
+                : "bg-gray-200"
+        }`}
+    >
+        Expiring
+    </button>
+
+    <button
+        onClick={() => loadFilteredMembers("RECENT")}
+        className={`px-4 py-2 rounded-lg ${
+            selectedFilter === "RECENT"
+                ? "bg-purple-600 text-white"
+                : "bg-gray-200"
+        }`}
+    >
+        Recent
+    </button>
+
+    <button
+        onClick={() => loadFilteredMembers("UPCOMING")}
+        className={`px-4 py-2 rounded-lg ${
+            selectedFilter === "UPCOMING"
+                ? "bg-cyan-600 text-white"
+                : "bg-gray-200"
+        }`}
+    >
+        Upcoming Bills
+    </button>
+
+
+</div>
 
 
             {/* Table */}

@@ -16,6 +16,11 @@ import UpdateMembership from "../pages/membership/UpdateMembership";
 import ProtectedRoute from "../components/ProtectedRoute";
 import DashboardLayout from "../layouts/DashboardLayout";
 
+import Profile from "../pages/profile/Profile";
+import ChangePassword from "../pages/profile/ChangePassword";
+
+import Notifications from "../pages/notification/Notifications"
+
 const AppRoutes = () => {
 
     return (
@@ -53,6 +58,11 @@ const AppRoutes = () => {
                     />
 
                     <Route
+                        path="/notifications"
+                        element={<Notifications />}
+                    />
+
+                    <Route
                         path="/members/edit/:id"
                         element={<UpdateMember />}
                     />
@@ -70,6 +80,16 @@ const AppRoutes = () => {
                     <Route
                         path="/memberships/edit/:id"
                         element={<UpdateMembership />}
+                    />
+
+                    <Route
+                        path="/profile"
+                        element={<Profile />}
+                    />
+
+                    <Route
+                        path="/change-password"
+                        element={<ChangePassword />}
                     />
 
                 </Route>
