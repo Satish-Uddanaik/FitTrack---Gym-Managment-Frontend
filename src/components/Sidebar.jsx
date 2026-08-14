@@ -9,6 +9,8 @@ import {
     Dumbbell,
 } from "lucide-react";
 import useAuth from "../hooks/useAuth";
+import { BarChart3 } from "lucide-react";
+import { IndianRupee } from "lucide-react";
 
 const Sidebar = () => {
     const { user, logout } = useAuth();
@@ -39,6 +41,16 @@ const Sidebar = () => {
             name: "Profile",
             path: "/profile",
             icon: User,
+        },
+        {
+            name: "Reports",
+            path: "/reports",
+            icon: BarChart3,
+        },
+        {
+            name: "Revenue",
+            path: "/revenue",
+            icon: IndianRupee,
         }
     ];
 
@@ -90,10 +102,9 @@ const Sidebar = () => {
                             key={link.path}
                             to={link.path}
                             className={({ isActive }) =>
-                                `flex items-center gap-3 px-3.5 py-3 rounded-xl text-sm font-medium transition-all duration-200 group ${
-                                    isActive
-                                        ? "bg-blue-600 text-white shadow-lg shadow-blue-600/30 font-semibold"
-                                        : "text-slate-400 hover:bg-slate-800/70 hover:text-white"
+                                `flex items-center gap-3 px-3.5 py-3 rounded-xl text-sm font-medium transition-all duration-200 group ${isActive
+                                    ? "bg-blue-600 text-white shadow-lg shadow-blue-600/30 font-semibold"
+                                    : "text-slate-400 hover:bg-slate-800/70 hover:text-white"
                                 }`
                             }
                         >
