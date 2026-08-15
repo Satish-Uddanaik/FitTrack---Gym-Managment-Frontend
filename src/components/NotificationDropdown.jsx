@@ -3,7 +3,7 @@ import { Bell, AlertCircle, Clock3, XCircle } from "lucide-react";
 import { getNotifications } from "../api/notificationApi";
 import { Link } from "react-router-dom";
 
-const NotificationDropdown = () => {
+const NotificationDropdown = ({ count }) => {
 
     const [open, setOpen] = useState(false);
     const [notifications, setNotifications] = useState([]);
@@ -101,6 +101,16 @@ const NotificationDropdown = () => {
             >
 
                 <Bell className="w-5 h-5" />
+
+                {count > 0 && (
+                    <>
+                        <span className="absolute top-2 right-2 w-2 h-2 bg-rose-500 rounded-full ring-2 ring-white"></span>
+
+                        <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 flex items-center justify-center rounded-full bg-red-600 text-white text-[10px] font-bold">
+                            {count > 99 ? "99+" : count}
+                        </span>
+                    </>
+                )}
 
             </button>
 
