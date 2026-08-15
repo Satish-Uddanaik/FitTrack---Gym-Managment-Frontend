@@ -25,6 +25,8 @@ import Reports from "../pages/reports/Reports";
 
 import Revenue from "../pages/reports/Revenue";
 
+import Home from "../components/Home";
+
 const AppRoutes = () => {
 
     return (
@@ -33,7 +35,7 @@ const AppRoutes = () => {
 
             {/* Public */}
 
-            <Route path="/" element={<Navigate to="/login" replace />} />
+            <Route path="/" element={<Home />} />
 
             <Route path="/login" element={<Login />} />
 
